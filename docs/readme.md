@@ -1,3 +1,4 @@
+![Popug aTES architecture diagram](/docs/Async%20architecture%20-%20lesson%200.drawio.png)
 # Описание сервисов
 
 Сервисы далее рассматриваются как black-box.
