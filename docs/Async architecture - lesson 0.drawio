@@ -1,67 +1,76 @@
-<mxfile host="app.diagrams.net" modified="2021-10-17T09:00:21.734Z" agent="5.0 (Windows)" etag="w7SIfLd6Sp_1DfG6GF9n" version="15.5.4" type="github">
+<mxfile host="app.diagrams.net" modified="2021-10-17T09:09:54.481Z" agent="5.0 (Windows)" etag="1xecVEXUkUBk3LV4OLfM" version="15.5.4" type="github">
   <diagram id="PKJcpfp9fHlz8DO3ZgGk" name="Page-1">
-    <mxGraphModel dx="1185" dy="1796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1058" dy="1796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="3Mw3wMPNelG5Jn2YJyQV-1" value="Profile &amp;amp; authorization Service" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="310" y="-723.5" width="120" height="60" as="geometry" />
+          <mxGeometry x="369" y="-837" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="3Mw3wMPNelG5Jn2YJyQV-93" value="" style="endArrow=classic;startArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="3Mw3wMPNelG5Jn2YJyQV-60" target="32Tapo_GccJvilDsEZV3-38" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="400" y="-556" as="sourcePoint" />
-            <mxPoint x="640" y="-40" as="targetPoint" />
+            <mxPoint x="459" y="-669.5" as="sourcePoint" />
+            <mxPoint x="699" y="-153.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="32Tapo_GccJvilDsEZV3-89" target="3Mw3wMPNelG5Jn2YJyQV-1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="220" y="-623.9999999999998" as="sourcePoint" />
+            <mxPoint x="279" y="-737.4999999999998" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-38" value="Payments Service" style="rounded=0;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
-          <mxGeometry x="570" y="-830" width="120" height="60" as="geometry" />
+          <mxGeometry x="629" y="-943.5" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-54" value="aTES UI" style="aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.mscae.enterprise.app_generic" vertex="1" parent="1">
-          <mxGeometry x="20" y="-819.5" width="50" height="39" as="geometry" />
+          <mxGeometry x="79" y="-933" width="50" height="39" as="geometry" />
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-61" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" edge="1" parent="1" source="32Tapo_GccJvilDsEZV3-54" target="32Tapo_GccJvilDsEZV3-89">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="190" y="-759.5" as="sourcePoint" />
+            <mxPoint x="249" y="-873" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-63" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="32Tapo_GccJvilDsEZV3-89" target="3Mw3wMPNelG5Jn2YJyQV-60">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="220" y="-869.5" as="sourcePoint" />
+            <mxPoint x="279" y="-983" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-74" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3Mw3wMPNelG5Jn2YJyQV-8" target="3Mw3wMPNelG5Jn2YJyQV-60">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="410" y="-636.5" as="targetPoint" />
+            <mxPoint x="469" y="-750" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="3Mw3wMPNelG5Jn2YJyQV-8" value="&lt;div&gt;Tasks Service&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="310" y="-936.5" width="120" height="60" as="geometry" />
+          <mxGeometry x="369" y="-1050" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="3Mw3wMPNelG5Jn2YJyQV-60" value="Accounting Service" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="310" y="-829.5" width="120" height="60" as="geometry" />
+          <mxGeometry x="369" y="-943" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-84" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="32Tapo_GccJvilDsEZV3-77" target="3Mw3wMPNelG5Jn2YJyQV-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-77" value="Notifications service" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="570" y="-720" width="120" height="60" as="geometry" />
+          <mxGeometry x="629" y="-837" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-78" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3Mw3wMPNelG5Jn2YJyQV-60" target="32Tapo_GccJvilDsEZV3-77">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="460" y="-700" as="sourcePoint" />
-            <mxPoint x="510" y="-750" as="targetPoint" />
+            <mxPoint x="519" y="-813.5" as="sourcePoint" />
+            <mxPoint x="569" y="-863.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-90" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="32Tapo_GccJvilDsEZV3-89" target="3Mw3wMPNelG5Jn2YJyQV-8">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="32Tapo_GccJvilDsEZV3-89" value="&lt;div&gt;aTES API&lt;/div&gt;&lt;div&gt;(BFF)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
-          <mxGeometry x="120" y="-830" width="120" height="60" as="geometry" />
+          <mxGeometry x="179" y="-943.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="32Tapo_GccJvilDsEZV3-92" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;UberPopug inc:&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;SSO form&lt;/div&gt;&lt;/li&gt;&lt;li&gt;&lt;div align=&quot;left&quot;&gt;Beak form detector&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Popug creds and etc&lt;br&gt;&lt;div align=&quot;left&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;(out of scope)" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="309" y="-753.5" width="301" height="183.5" as="geometry" />
+        </mxCell>
+        <mxCell id="32Tapo_GccJvilDsEZV3-95" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.4;entryY=0.1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="3Mw3wMPNelG5Jn2YJyQV-1" target="32Tapo_GccJvilDsEZV3-92">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="509" y="-873.5" as="sourcePoint" />
+            <mxPoint x="559" y="-923.5" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
