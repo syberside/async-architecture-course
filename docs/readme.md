@@ -179,3 +179,6 @@ Data: Report - Tasks (description, id, cost) + period (date/month/year)
 * *  `-> Обновление баланса попуга`
 * *  `-> Email попугу`
 * *  `-> Обновление статистики и аналитики`
+
+# Модель данных
+![Data model](/docs/data-model.drawio.png)
