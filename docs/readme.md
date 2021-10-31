@@ -182,3 +182,6 @@ Data: Report - Tasks (description, id, cost) + period (date/month/year)
 
 # Модель данных
 ![Data model](/docs/data-model.drawio.png)
+
+# Домены, cервисы и события
+![Services and events](/docs/domains.drawio.png)
