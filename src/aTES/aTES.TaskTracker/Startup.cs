@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace aTES.TaskTracker
 {
@@ -19,6 +20,8 @@ namespace aTES.TaskTracker
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
             services.AddAuthentication(options =>
             {

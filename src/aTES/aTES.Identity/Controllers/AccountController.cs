@@ -1,6 +1,7 @@
 ﻿using aTES.Identity.Models.Account;
 using IdentityServer4;
 using IdentityServer4.Events;
+using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Test;
@@ -28,8 +29,10 @@ namespace aTES.Identity.Controllers
         [HttpGet]
         public ViewResult Login(string returnUrl)
         {
-            var vm = BuildLoginViewModelAsync(returnUrl);
-
+            var vm = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+            };
             return View(vm);
         }
 
@@ -107,28 +110,46 @@ namespace aTES.Identity.Controllers
             }
 
             // something went wrong, show form with error
-            var vm = BuildLoginViewModelAsync(model);
+            var vm = new LoginViewModel
+            {
+                ReturnUrl = model.ReturnUrl,
+                Username = model.Username,
+                RememberLogin = model.RememberLogin,
+            };
             return View(vm);
         }
 
-
-        private LoginViewModel BuildLoginViewModelAsync(string returnUrl)
+        [HttpGet]
+        public async Task<IActionResult> Logout(string logoutId)
         {
-            // this is meant to short circuit the UI and only trigger the one external IdP
-            var vm = new LoginViewModel
+            return await DoLogout(logoutId);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DoLogout(string logoutId)
+        {
+            if (User?.Identity.IsAuthenticated == true)
             {
-                ReturnUrl = returnUrl,
-            };
+                await HttpContext.SignOutAsync();
+                await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+            }
 
-            return vm;
+            var logout = await _interaction.GetLogoutContextAsync(logoutId);
+            if (logout?.PostLogoutRedirectUri != null)
+            {
+                return Redirect(logout.PostLogoutRedirectUri);
+            }
+
+
+            return View("LoggedOut", logoutId);
         }
 
-        private LoginViewModel BuildLoginViewModelAsync(LoginViewModel model)
+        [HttpGet]
+        public IActionResult AccessDenied()
         {
-            var vm = BuildLoginViewModelAsync(model.ReturnUrl);
-            vm.Username = model.Username;
-            vm.RememberLogin = model.RememberLogin;
-            return vm;
+            return View();
         }
+
     }
 }
