@@ -23,10 +23,12 @@ namespace aTES.Identity
 
             services
                 .AddIdentityServer()
-                .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryClients(Config.Clients)
+                 .AddInMemoryIdentityResources(Config.IdentityResources)
+                 .AddInMemoryApiScopes(Config.ApiScopes)
+                 .AddInMemoryClients(Config.Clients)
                 //TODO: test only
-                .AddDeveloperSigningCredential();
+                .AddDeveloperSigningCredential()
+                .AddTestUsers(Config.TestUsers());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

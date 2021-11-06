@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 
 namespace aTES.TaskTracker
 {
@@ -21,16 +20,22 @@ namespace aTES.TaskTracker
         {
             services.AddControllersWithViews();
 
-            services.AddAuthentication("Bearer")
-            .AddJwtBearer("Bearer", options =>
+            services.AddAuthentication(options =>
             {
-                options.Authority = "https://localhost:5001";
-
-                options.TokenValidationParameters = new TokenValidationParameters
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
                 {
-                    ValidateAudience = false
-                };
-            });
+                    options.Authority = "https://localhost:5001";
+
+                    options.ClientId = "mvc";
+                    options.ClientSecret = "secret";
+                    options.ResponseType = "code";
+
+                    options.SaveTokens = true;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,7 +64,8 @@ namespace aTES.TaskTracker
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}")
+                .RequireAuthorization();
             });
         }
     }

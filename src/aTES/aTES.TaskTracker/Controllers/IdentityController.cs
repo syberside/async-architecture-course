@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace aTES.Identity.Controllers
 {
     [Route("identity")]
-    [Authorize]
     public class IdentityController : Controller
     {
         [HttpGet]
