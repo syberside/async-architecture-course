@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+
+  identity-db:
+    image: postgres
+    restart: always
+    ports: 
+     - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ates_identity
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

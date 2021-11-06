@@ -1,8 +1,8 @@
 ﻿using aTES.Identity.Models.Account;
+using aTES.Identity.Services;
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +14,12 @@ namespace aTES.Identity.Controllers
     public class AccountController : Controller
     {
         private readonly IIdentityServerInteractionService _identityService;
-        private readonly TestUserStore _usersStore;
+        private readonly UsersStore _usersStore;
 
-        public AccountController(IIdentityServerInteractionService interaction, TestUserStore users)
+        public AccountController(IIdentityServerInteractionService interaction, UsersStore userStore)
         {
             _identityService = interaction;
-            _usersStore = users;
+            _usersStore = userStore;
         }
 
         [HttpGet]
@@ -63,7 +63,7 @@ namespace aTES.Identity.Controllers
             }
 
             // validate username/password against in-memory store
-            var credsAreValid = _usersStore.ValidateCredentials(model.Username, model.Password);
+            var credsAreValid = await _usersStore.ValidateCredentials(model.Username, model.Password);
             if (!credsAreValid)
             {
                 ModelState.AddModelError(string.Empty, "invalid credentials");
@@ -77,7 +77,7 @@ namespace aTES.Identity.Controllers
 
             }
 
-            var user = _usersStore.FindByUsername(model.Username);
+            var user = await _usersStore.FindByUsername(model.Username);
             AuthenticationProperties props = null;
             if (model.RememberLogin)
             {

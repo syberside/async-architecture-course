@@ -1,4 +1,6 @@
 using aTES.Identity.Configs;
+using aTES.Identity.DataLayer;
+using aTES.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,9 +28,11 @@ namespace aTES.Identity
                  .AddInMemoryIdentityResources(Config.IdentityResources)
                  .AddInMemoryApiScopes(Config.ApiScopes)
                  .AddInMemoryClients(Config.Clients)
+                 .AddProfileService<ProfileService>()
                 //TODO: test only
-                .AddDeveloperSigningCredential()
-                .AddTestUsers(Config.TestUsers());
+                .AddDeveloperSigningCredential();
+            services.AddTransient<UsersStore>();
+            services.AddDbContext<IdentityDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
