@@ -1,6 +1,5 @@
 ﻿using IdentityServer4.Models;
 using IdentityServer4.Services;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -8,17 +7,17 @@ namespace aTES.Identity.Services
 {
     public class ProfileService : IProfileService
     {
-        private readonly UsersStore _userStore;
+        private readonly UsersStore _usersStore;
 
-        public ProfileService(UsersStore userStore)
+        public ProfileService(UsersStore usersStore)
         {
-            _userStore = userStore;
+            _usersStore = usersStore;
         }
 
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            var userName = GetUserNameFromClaims(context.Subject);
-            var user = await _userStore.GetByUsername(userName);
+            var userName = context.Subject.GetUserName();
+            var user = await _usersStore.GetByUsername(userName);
 
             var claims = new[]
             {
@@ -30,14 +29,9 @@ namespace aTES.Identity.Services
 
         public async Task IsActiveAsync(IsActiveContext context)
         {
-            var userName = GetUserNameFromClaims(context.Subject);
-            var user = await _userStore.FindByUsername(userName);
+            var userName = context.Subject.GetUserName();
+            var user = await _usersStore.FindByUsername(userName);
             context.IsActive = (user != null) && user.IsActive;
-        }
-
-        private string GetUserNameFromClaims(ClaimsPrincipal claims)
-        {
-            return claims.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
         }
     }
 }

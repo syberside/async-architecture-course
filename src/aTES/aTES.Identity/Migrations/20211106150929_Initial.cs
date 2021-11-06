@@ -1,4 +1,4 @@
-﻿using aTES.Identity.Services;
+﻿using aTES.Identity.Domain;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 

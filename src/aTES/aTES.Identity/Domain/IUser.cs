@@ -1,4 +1,4 @@
-﻿namespace aTES.Identity.Services
+﻿namespace aTES.Identity.Domain
 {
     public interface IUser
     {

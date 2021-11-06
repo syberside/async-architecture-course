@@ -1,26 +1,57 @@
 ﻿using aTES.Identity.Models;
+using aTES.Identity.Models.Account;
+using aTES.Identity.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace aTES.Identity.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly UsersStore _usersStore;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(UsersStore usersStore)
         {
-            _logger = logger;
+            _usersStore = usersStore;
         }
 
-        public IActionResult Index()
+        public IActionResult IndexAsync()
         {
             return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> UserManagementAsync()
+        {
+            var userName = User.GetUserName();
+            var user = await _usersStore.GetByUsername(userName);
+            if (user.Role == Domain.Roles.Admin)
+            {
+                ViewData["ShowUsers"] = true;
+            }
+            return View(new CreateUserModel());
+        }
+
+        [Authorize]
+
+        [HttpPost]
+        public async Task<IActionResult> UserManagementAsync(CreateUserModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return await UserManagementAsync();
+            }
+
+            var alreadyExistUser = await _usersStore.FindByUsername(model.Username);
+            if (alreadyExistUser != null)
+            {
+                ModelState.AddModelError("user already exists", "User with the same name already exists");
+                return await UserManagementAsync();
+            }
+            await _usersStore.Register(model.Username, model.Password, model.Role);
+            return await UserManagementAsync();
         }
 
         public IActionResult Privacy()

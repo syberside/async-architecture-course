@@ -47,7 +47,7 @@ namespace aTES.Identity.Controllers
                 }
                 else
                 {
-                    return Redirect("~/");
+                    return RedirectToAction("Index", "Home");
                 }
             }
 
@@ -108,7 +108,7 @@ namespace aTES.Identity.Controllers
             }
             else if (string.IsNullOrEmpty(model.ReturnUrl))
             {
-                return Redirect("~/");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -139,7 +139,7 @@ namespace aTES.Identity.Controllers
             }
 
 
-            return View("LoggedOut", logoutId);
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
