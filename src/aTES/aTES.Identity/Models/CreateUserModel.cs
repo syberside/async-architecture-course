@@ -7,6 +7,7 @@ namespace aTES.Identity.Models.Account
 {
     public class CreateUserModel
     {
+
         [Required]
         public string Username { get; set; }
 
@@ -16,18 +17,16 @@ namespace aTES.Identity.Models.Account
         [Required]
         public Roles Role { get; set; }
 
-        public IEnumerable<SelectListItem> DropDownItems
+        public IEnumerable<SelectListItem> DropDownItems(Roles? selected)
         {
-            get
+            foreach (var value in new[] { Roles.RegularPopug, Roles.Admin, })
             {
-                foreach (var value in new[] { Roles.RegularPopug, Roles.Admin, })
+                yield return new SelectListItem
                 {
-                    yield return new SelectListItem
-                    {
-                        Text = value.ToString(),
-                        Value = ((int)value).ToString(),
-                    };
-                }
+                    Text = value.ToString(),
+                    Value = ((int)value).ToString(),
+                    Selected = selected == value,
+                };
             }
         }
     }

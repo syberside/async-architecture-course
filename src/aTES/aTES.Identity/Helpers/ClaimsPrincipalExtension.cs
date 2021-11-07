@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 
-namespace aTES.Identity.Services
+namespace aTES.Identity.Helpers
 {
     public static class ClaimsPrincipalExtension
     {

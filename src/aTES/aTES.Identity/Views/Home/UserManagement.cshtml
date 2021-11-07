@@ -9,6 +9,12 @@
 <div class="text-center">
     @if (ViewData["ShowUsers"] != null)
     {
+        var users = await _usersStore.ListAll();
+        foreach (var item in users)
+        {
+            <form asp-action="UpdateRole" id="@item.PublicId"></form>
+        }
+
         <table>
             <thead>
                 <tr>
@@ -19,11 +25,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in await _usersStore.ListAll())
+                @foreach (var item in users)
                 {
                     <tr>
                         <td>
-                            @item.SubjectId
+                            @item.PublicId
                         </td>
                         <td>
                             @item.Username
@@ -32,15 +38,28 @@
                             @item.PasswordHash
                         </td>
                         <td>
-                            @item.Role
+                            @if (item.Role == Roles.SuperUser)
+                            {
+                                @item.Role
+                            }
+                            else
+                            {
+                                <input type="hidden" form="@item.PublicId" value="@item.PublicId" name="Id">
+                                <select form="@item.PublicId" name="Role" asp-items="Model.DropDownItems(item.Role)"></select>
+                                <button form="@item.PublicId" onClick="this.form.submit(); this.disabled=true;">
+                                    Update
+                                </button>
+                            }
+
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+
         <partial name="_ValidationSummary" />
 
-        <form asp-route="UserManagement">
+        <form asp-action="UserManagement">
             <div class="form-group">
                 <label asp-for="Username"></label>
                 <input class="form-control" placeholder="Username" asp-for="Username" autofocus>
@@ -51,7 +70,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Role"></label>
-                <select asp-for="Role" asp-items="Model.DropDownItems"></select>
+                <select asp-for="Role" asp-items="Model.DropDownItems(Roles.RegularPopug)"></select>
             </div>
             <button class="btn btn-primary" name="button" value="login">Create</button>
         </form>

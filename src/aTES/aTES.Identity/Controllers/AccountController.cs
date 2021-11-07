@@ -89,7 +89,7 @@ namespace aTES.Identity.Controllers
             };
 
             // issue authentication cookie with subject ID and username
-            var isuser = new IdentityServerUser(user.SubjectId)
+            var isuser = new IdentityServerUser(user.PublicId)
             {
                 DisplayName = user.Username
             };

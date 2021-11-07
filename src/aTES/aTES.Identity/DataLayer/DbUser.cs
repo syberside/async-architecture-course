@@ -27,7 +27,7 @@ namespace aTES.Identity.DataLayer
 
 
         [NotMapped]
-        public string SubjectId => Id.ToString();
+        public string PublicId => Id.ToString();
 
         [NotMapped]
         public bool IsActive => true;

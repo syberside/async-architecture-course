@@ -2,7 +2,16 @@
 {
     public enum Roles
     {
-        Admin,
-        RegularPopug,
+        SuperUser = 0,
+        Admin = 1,
+        RegularPopug = 2,
+    }
+
+    public static class RolesExtension
+    {
+        public static bool CanAdministerUsers(this Roles role)
+        {
+            return role == Roles.SuperUser || role == Roles.Admin;
+        }
     }
 }

@@ -10,10 +10,12 @@ namespace aTES.Identity.Services
     public class UsersStore
     {
         private readonly IdentityDbContext _dbContext;
+        private readonly MessageBus _messageBus;
 
-        public UsersStore(IdentityDbContext dbContext)
+        public UsersStore(IdentityDbContext dbContext, MessageBus messageBus)
         {
             _dbContext = dbContext;
+            _messageBus = messageBus;
         }
 
         public async Task<bool> ValidateCredentials(string username, string password)
@@ -45,14 +47,24 @@ namespace aTES.Identity.Services
 
         public async Task Register(string login, string password, Roles role)
         {
-            _dbContext.Users.Add(new DbUser
+            var newUser = new DbUser
             {
                 Id = Guid.NewGuid(),
                 PasswordHash = password.ToSha256(),
                 Role = role,
                 Username = login,
-            });
+            };
+            _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
+            await _messageBus.SendUserUpdatedCUDEvent(newUser);
+        }
+
+        public async Task UpdateRole(Guid id, Roles role)
+        {
+            var user = await _dbContext.Users.FirstAsync(x => x.Id == id);
+            user.Role = role;
+            await _dbContext.SaveChangesAsync();
+            await _messageBus.SendUserUpdatedCUDEvent(user);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using aTES.Identity.Models;
+﻿using aTES.Identity.Domain;
+using aTES.Identity.Helpers;
+using aTES.Identity.Models;
 using aTES.Identity.Models.Account;
 using aTES.Identity.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +29,7 @@ namespace aTES.Identity.Controllers
         {
             var userName = User.GetUserName();
             var user = await _usersStore.GetByUsername(userName);
-            if (user.Role == Domain.Roles.Admin)
+            if (user.Role.CanAdministerUsers())
             {
                 ViewData["ShowUsers"] = true;
             }
@@ -35,14 +37,18 @@ namespace aTES.Identity.Controllers
         }
 
         [Authorize]
-
         [HttpPost]
         public async Task<IActionResult> UserManagementAsync(CreateUserModel model)
         {
+            if (!await ValidateAccess())
+            {
+                return Forbid();
+            }
             if (!ModelState.IsValid)
             {
                 return await UserManagementAsync();
             }
+
 
             var alreadyExistUser = await _usersStore.FindByUsername(model.Username);
             if (alreadyExistUser != null)
@@ -54,6 +60,18 @@ namespace aTES.Identity.Controllers
             return await UserManagementAsync();
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UpdateRole(UpdateRoleModel model)
+        {
+            if (!await ValidateAccess())
+            {
+                return Forbid();
+            }
+            await _usersStore.UpdateRole(model.Id, model.Role);
+            return RedirectToAction("UserManagement");
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -63,6 +81,14 @@ namespace aTES.Identity.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private async Task<bool> ValidateAccess()
+        {
+            //TODO: replace with policy and read from claims
+            var username = User.GetUserName();
+            var user = await _usersStore.GetByUsername(username);
+            return user.Role.CanAdministerUsers();
         }
     }
 }

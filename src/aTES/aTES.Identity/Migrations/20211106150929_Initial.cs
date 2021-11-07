@@ -25,7 +25,7 @@ namespace aTES.Identity.Migrations
             migrationBuilder.InsertData(
                 table: "users",
                 columns: new[] { "id", "username", "pwd_hash", "role" },
-                values: new object[] { Guid.NewGuid(), "root", "oRWenfNnDVSdBFJFMmKfVHfOt97sm0XkfowAlQbsssg=", (int)Roles.Admin }
+                values: new object[] { Guid.NewGuid(), "root", "oRWenfNnDVSdBFJFMmKfVHfOt97sm0XkfowAlQbsssg=", (int)Roles.SuperUser }
                 );
         }
 

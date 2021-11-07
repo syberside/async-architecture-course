@@ -2,7 +2,7 @@
 {
     public interface IUser
     {
-        public string SubjectId { get; }
+        public string PublicId { get; }
 
         public string Username { get; }
 
