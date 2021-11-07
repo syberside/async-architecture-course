@@ -11,6 +11,11 @@ namespace aTES.Identity.Configs
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
+                new IdentityResource(
+                    name: "PopugRole",
+                    displayName: "PopugRole",
+                    userClaims: new[] { "PopugRole", }
+                    ),
             };
 
         public static IEnumerable<ApiScope> ApiScopes =>
@@ -48,7 +53,12 @@ namespace aTES.Identity.Configs
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                         "PopugRole"
+                    },
+                    Claims=new []
+                    {
+                        new ClientClaim("PopugRole", "PopugRole")
                     }
                 }
             };

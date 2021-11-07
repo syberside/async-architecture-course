@@ -22,7 +22,7 @@ namespace aTES.Identity.Services
 
             var claims = new[]
             {
-                new Claim("Role", user.Role.ToString()),
+                new Claim("PopugRole", user.Role.ToString()),
             };
             //NOTE: will be addded to JWT .Token.access_token
             context.IssuedClaims.AddRange(claims);

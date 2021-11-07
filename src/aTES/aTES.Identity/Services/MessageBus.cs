@@ -1,6 +1,7 @@
 ﻿using aTES.Identity.Domain;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace aTES.Identity.Services
     public class MessageBus : IDisposable
     {
         //private readonly IProducer<string, UserUpdatedMessage> _producer;
-        private readonly IProducer<Null, string> _producer;
+        private readonly IProducer<string, string> _producer;
         private readonly ILogger<MessageBus> _logger;
 
         public MessageBus(ILogger<MessageBus> logger)
@@ -22,7 +23,7 @@ namespace aTES.Identity.Services
             //_producer = new ProducerBuilder<string, UserUpdatedMessage>(config)
             //    .SetValueSerializer(new JsonSerializer<Person>(schemaRegistry, jsonSerializerConfig))
             //    .Build();
-            _producer = new ProducerBuilder<Null, string>(config).Build();
+            _producer = new ProducerBuilder<string, string>(config).Build();
             _logger = logger;
         }
 
@@ -39,11 +40,14 @@ namespace aTES.Identity.Services
             //    Key = user.PublicId,
             //    Value = message,
             //});
-            var deliveryResult = await _producer.ProduceAsync("accounts-cud-test", new Message<Null, string>
+            var messageJson = JsonConvert.SerializeObject(message);
+            var deliveryResult = await _producer.ProduceAsync("accounts-cud", new Message<string, string>
             {
-                Value = "hello from " + user.Username,
+                Key = user.PublicId,
+                Value = messageJson,
             });
-            _logger.LogInformation("Message delivered with offset {0} to partition {1} and status {2}",
+            _logger.LogInformation("Message {0} delivered with offset {1} to partition {2} and status {3}",
+                messageJson,
                 deliveryResult.Offset,
                 deliveryResult.Partition,
                 deliveryResult.Status);

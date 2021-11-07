@@ -8,6 +8,6 @@ namespace aTES.Identity.DataLayer
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
            => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ates_identity;Username=postgres;Password=password");
 
-        public DbSet<DbUser> Users { get; set; }
+        public virtual DbSet<DbUser> Users { get; set; }
     }
 }
