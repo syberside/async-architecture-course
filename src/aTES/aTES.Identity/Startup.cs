@@ -1,6 +1,9 @@
 using aTES.Identity.Configs;
+using aTES.Identity.DataLayer;
+using aTES.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,15 +26,21 @@ namespace aTES.Identity
 
             services
                 .AddIdentityServer()
-                .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryClients(Config.Clients)
+                 .AddInMemoryIdentityResources(Config.IdentityResources)
+                 .AddInMemoryApiScopes(Config.ApiScopes)
+                 .AddInMemoryClients(Config.Clients)
+                 .AddProfileService<ProfileService>()
                 //TODO: test only
                 .AddDeveloperSigningCredential();
+            services.AddTransient<UsersStore>()
+                    .AddTransient<MessageBus>();
+            services.AddDbContext<IdentityDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IdentityDbContext dbContext)
         {
+            dbContext.Database.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

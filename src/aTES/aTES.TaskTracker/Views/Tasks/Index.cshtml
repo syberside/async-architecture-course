@@ -1,0 +1,56 @@
+﻿@model IndexViewModel
+
+<a href="?onlyMyTasks=false" class="btn btn-@(Model.OnlyMyTasks ? "secondary":"primary")">All</a>
+<a href="?onlyMyTasks=true" class="btn btn-@(Model.OnlyMyTasks ? "primary":"secondary")">OnlyMy</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Task</th>
+            <th scope="col">Assignee</th>
+            <th scope="col">IsCompleted</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model.Tasks)
+        {
+            <tr>
+                <td>@task.Task.Description</td>
+                <td>@task.Task.AssigneeName</td>
+                <td>@task.Task.IsCompeleted</td>
+                <td>
+                    @if (task.CanComplete)
+                    {
+                        <button form="complete_form" type="submit" name="TaskId" value="@task.Task.PublicId" class="btn btn-primary">
+                            Complete
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form id="complete_form" asp-action="CompleteTask"></form>
+
+@if (Model.CanAssignTasks)
+{
+    <hr />
+    <form asp-action="AssignOpenTickets">
+        <button type="submit" onclick="this.form.submit(); this.disabled=true;"
+                class="btn btn-danger">
+            SHUFFLE!
+        </button>
+    </form>
+}
+
+<hr />
+<h1>Add new task</h1>
+<form asp-action="Create">
+    <div class="mb-3">
+        <label for="Description" class="form-label">What to do?</label>
+        <input type="text" name="Description" class="form-control" id="Description">
+    </div>
+    <button type="submit" class="btn btn-primary" onclick="this.form.submit(); this.disabled=true;">Add</button>
+</form>

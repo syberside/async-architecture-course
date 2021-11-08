@@ -1,9 +1,13 @@
+using aTES.TaskTracker.DataLayer;
+using aTES.TaskTracker.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace aTES.TaskTracker
 {
@@ -19,23 +23,44 @@ namespace aTES.TaskTracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TasksDbContext>();
+
             services.AddControllersWithViews();
 
-            services.AddAuthentication("Bearer")
-            .AddJwtBearer("Bearer", options =>
-            {
-                options.Authority = "https://localhost:5001";
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
-                options.TokenValidationParameters = new TokenValidationParameters
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
                 {
-                    ValidateAudience = false
-                };
-            });
+                    options.Authority = "https://localhost:5001";
+
+                    options.ClientId = "mvc";
+                    options.ClientSecret = "secret";
+                    options.ResponseType = "code";
+
+                    options.SaveTokens = true;
+                    options.Scope.Add("PopugRole");
+                    options.ClaimActions.Clear();
+                    options.ClaimActions.MapJsonKey("PopugRole", "PopugRole");
+                });
+
+            services
+                .AddTransient<MessageBus>()
+                .AddTransient<TasksService>()
+                .AddHostedService<AccountsCUDEventsConsumer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TasksDbContext dbContext)
         {
+            dbContext.Database.Migrate();
+            DataBaseIdReady = true;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -59,8 +84,11 @@ namespace aTES.TaskTracker
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}")
+                .RequireAuthorization();
             });
         }
+
+        public static bool DataBaseIdReady { get; private set; }
     }
 }
