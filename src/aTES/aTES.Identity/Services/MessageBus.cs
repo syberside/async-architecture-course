@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using DtoRole = aTES.SchemaRegistry.Users.Roles;
-using Roles = aTES.Identity.Domain.Roles;
 
 namespace aTES.Identity.Services
 {
@@ -30,12 +29,13 @@ namespace aTES.Identity.Services
             _logger = logger;
         }
 
-        public async Task SendUserUpdatedCUDEvent(IUser user)
+        public async Task SendUserUpdatedStreamEvent(IUser user)
         {
             var message = new UserUpdatedMessage
             {
                 Id = user.PublicId,
-                Role = MapToDtoRole(user.Role),
+                //Note: dirty solution, but enough for study project
+                Role = (DtoRole)user.Role,
                 Username = user.Username,
             };
             //var deliveryResult = await _producer.ProduceAsync("accounts-cud", new Message<string, UserUpdatedMessage>
@@ -55,18 +55,6 @@ namespace aTES.Identity.Services
                 deliveryResult.Partition,
                 deliveryResult.Status);
 
-        }
-
-        public DtoRole MapToDtoRole(Roles role)
-        {
-            switch (role)
-            {
-                case Roles.Admin: return DtoRole.Admin;
-                case Roles.Manager: return DtoRole.Manager;
-                case Roles.RegularPopug: return DtoRole.RegularPopug;
-                case Roles.SuperUser: return DtoRole.SuperUser;
-                default: throw new NotSupportedException();
-            }
         }
 
         public void Dispose()

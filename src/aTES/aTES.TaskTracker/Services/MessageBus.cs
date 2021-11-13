@@ -29,7 +29,7 @@ namespace aTES.TaskTracker.Services
             _logger = logger;
         }
 
-        public async Task SendTaskUpdatedCUDEvent(ITask task)
+        public async Task SendTaskUpdatedStreamEvent(ITask task)
         {
             var message = new TaskUpdatedMessage
             {

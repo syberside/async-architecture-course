@@ -36,7 +36,7 @@ namespace aTES.TaskTracker.Services
             await _dbContext.SaveChangesAsync();
             await _messageBus.SendTaskCreatedEvent(newTask);
             await _messageBus.SendTaskAssignedEvent(newTask);
-            await _messageBus.SendTaskUpdatedCUDEvent(newTask);
+            await _messageBus.SendTaskUpdatedStreamEvent(newTask);
         }
 
         public async Task<ITask[]> ListAll(string userPublicId)
@@ -63,7 +63,7 @@ namespace aTES.TaskTracker.Services
             foreach (var task in openTasks)
             {
                 await _messageBus.SendTaskAssignedEvent(task);
-                await _messageBus.SendTaskUpdatedCUDEvent(task);
+                await _messageBus.SendTaskUpdatedStreamEvent(task);
             }
         }
 
@@ -83,7 +83,7 @@ namespace aTES.TaskTracker.Services
             task.IsCompeleted = true;
             await _dbContext.SaveChangesAsync();
             await _messageBus.SendTaskCompletedEvent(task);
-            await _messageBus.SendTaskUpdatedCUDEvent(task);
+            await _messageBus.SendTaskUpdatedStreamEvent(task);
             return true;
         }
 
