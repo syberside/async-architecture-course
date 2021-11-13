@@ -34,13 +34,13 @@
 
 <form id="complete_form" asp-action="CompleteTask"></form>
 
-@if (Model.CanAssignTasks)
+@if (Model.CanPutBirdInACage)
 {
     <hr />
-    <form asp-action="AssignOpenTickets">
+    <form asp-action="PutBirdsInACages">
         <button type="submit" onclick="this.form.submit(); this.disabled=true;"
                 class="btn btn-danger">
-            SHUFFLE!
+            Put birds in a cage
         </button>
     </form>
 }

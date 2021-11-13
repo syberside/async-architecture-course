@@ -40,11 +40,6 @@ namespace aTES.Identity.Services
                 Role = (DtoRole)user.Role,
                 Username = user.Username,
             };
-            //var deliveryResult = await _producer.ProduceAsync("accounts-cud", new Message<string, UserUpdatedMessage>
-            //{
-            //    Key = user.PublicId,
-            //    Value = message,
-            //});
             var messageJson = _serializer.Serialize(message);
             var deliveryResult = await _producer.ProduceAsync(Topics.USERS_STREAM_LEGACY, new Message<string, string>
             {

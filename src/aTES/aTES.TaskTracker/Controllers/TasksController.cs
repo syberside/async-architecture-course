@@ -32,7 +32,7 @@ namespace aTES.TaskTracker.Controllers
             {
                 Tasks = tasks,
                 OnlyMyTasks = onlyMyTasks,
-                CanAssignTasks = await CanUserReassignTasks(),
+                CanPutBirdInACage = await CanPutBirdsInACage(),
                 CanStreamAllTasks = await CanUserStreamTasks(),
             };
             return View(vm);
@@ -57,9 +57,9 @@ namespace aTES.TaskTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssignOpenTickets()
+        public async Task<IActionResult> PutBirdsInACages()
         {
-            if (!await CanUserReassignTasks())
+            if (!await CanPutBirdsInACage())
             {
                 return Forbid();
             }
@@ -90,7 +90,7 @@ namespace aTES.TaskTracker.Controllers
             return RedirectToAction("Index");
         }
 
-        private async Task<bool> CanUserReassignTasks()
+        private async Task<bool> CanPutBirdsInACage()
         {
             var role = await _tasksService.GetRole(CurrentUserPublicId());
             return role == Roles.Admin || role == Roles.Manager;

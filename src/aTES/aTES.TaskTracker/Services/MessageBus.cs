@@ -1,5 +1,6 @@
 ﻿using aTES.SchemaRegistry;
 using aTES.SchemaRegistry.Tasks;
+using aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1;
 using aTES.TaskTracker.Domain;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
@@ -11,21 +12,16 @@ namespace aTES.TaskTracker.Services
 {
     public class MessageBus : IDisposable
     {
-        //private readonly IProducer<string, UserUpdatedMessage> _producer;
         private readonly IProducer<string, string> _producer;
         private readonly ILogger<MessageBus> _logger;
         private readonly MessageSerializer _serializer;
-
+        //TODO: RENAME EVERYTHING
         public MessageBus(ILogger<MessageBus> logger, MessageSerializer serializer)
         {
             var config = new ProducerConfig
             {
                 BootstrapServers = "localhost:9092",
             };
-            //https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/JsonSerialization/Program.cs
-            //_producer = new ProducerBuilder<string, UserUpdatedMessage>(config)
-            //    .SetValueSerializer(new JsonSerializer<Person>(schemaRegistry, jsonSerializerConfig))
-            //    .Build();
             _producer = new ProducerBuilder<string, string>(config).Build();
             _logger = logger;
             _serializer = serializer;
@@ -52,31 +48,52 @@ namespace aTES.TaskTracker.Services
 
         public async Task SendTaskCreatedEvent(ITask task)
         {
-            var message = new TaskCreatedMessage
+            await SendWorkflowEvent(new TaskCreatedMessage_v1
             {
-                Id = task.PublicId,
-                Description = task.Description,
-            };
-            await Send(message, Topics.TASKS_WORKFLOW_LEGACY, task.PublicId);
+                EventCreatedAt = DateTime.Now,
+                EventId = Guid.NewGuid(),
+                EventProducer = "TasksService",
+                Payload = new TaskCreatedMessage_v1.Data
+                {
+                    Id = task.PublicId,
+                    Description = task.Description,
+                    JiraId = task.JiraId,
+                }
+            }, task.PublicId);
         }
 
-        public async Task SendTaskAssignedEvent(ITask task)
+        public async Task SendBirdInACageEvent(ITask task)
         {
-            var message = new TaskAssignedMessage
+            await SendWorkflowEvent(new BirdInACageMessage_v1
             {
-                Id = task.PublicId,
-                AssigneeId = task.AssigneePublicId,
-            };
-            await Send(message, Topics.TASKS_WORKFLOW_LEGACY, task.PublicId);
+                EventCreatedAt = DateTime.Now,
+                EventId = Guid.NewGuid(),
+                EventProducer = "TasksService",
+                Payload = new BirdInACageMessage_v1.Data
+                {
+                    Id = task.PublicId,
+                    AssigneeId = task.AssigneePublicId,
+                }
+            }, task.PublicId);
         }
 
-        public async Task SendTaskCompletedEvent(ITask task)
+        public async Task SendMilletInABowlEvent(ITask task)
         {
-            var message = new TaskCompletedMessage
+            await SendWorkflowEvent(new MilletInABowlMessage_v1
             {
-                Id = task.PublicId,
-            };
-            await Send(message, Topics.TASKS_WORKFLOW_LEGACY, task.PublicId);
+                EventCreatedAt = DateTime.Now,
+                EventId = Guid.NewGuid(),
+                EventProducer = "TasksService",
+                Payload = new MilletInABowlMessage_v1.Data
+                {
+                    Id = task.PublicId,
+                }
+            }, task.PublicId);
+        }
+
+        public async Task SendWorkflowEvent<T>(T message, string taskId) where T : IMessage
+        {
+            await Send(message, Topics.TASKS_WORKFLOW, taskId);
         }
 
         private async Task Send<T>(T message, string topicName, string key) where T : IMessage
