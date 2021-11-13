@@ -14,9 +14,9 @@ namespace aTES.TaskTracker.Services
         //private readonly IProducer<string, UserUpdatedMessage> _producer;
         private readonly IProducer<string, string> _producer;
         private readonly ILogger<MessageBus> _logger;
-        private readonly Serializer _serializer;
+        private readonly MessageSerializer _serializer;
 
-        public MessageBus(ILogger<MessageBus> logger, Serializer serializer)
+        public MessageBus(ILogger<MessageBus> logger, MessageSerializer serializer)
         {
             var config = new ProducerConfig
             {

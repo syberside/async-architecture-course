@@ -35,7 +35,7 @@ namespace aTES.Identity
                 .AddDeveloperSigningCredential();
             services.AddTransient<UsersStore>()
                     .AddTransient<MessageBus>()
-                    .AddTransient<Serializer>();
+                    .AddTransient<MessageSerializer>();
             services.AddDbContext<IdentityDbContext>();
         }
 

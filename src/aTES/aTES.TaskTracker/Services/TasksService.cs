@@ -20,8 +20,14 @@ namespace aTES.TaskTracker.Services
             _messageBus = messageBus;
         }
 
+        public bool IsValidTaskName(string name) => !name.Contains('[') && !name.Contains(']');
+
         public async Task Create(string description)
         {
+            if (!IsValidTaskName(description))
+            {
+                throw new ArgumentException();
+            }
             var taskId = Guid.NewGuid();
             var tasksDistribution = await DistibuteTasks(new[] { taskId });
             var assignee = tasksDistribution[taskId];

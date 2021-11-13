@@ -43,11 +43,12 @@ namespace aTES.TaskTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CreateTaskModel model)
+        public async Task<IActionResult> IndexAsync(CreateTaskModel model)
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+
+                return await IndexAsync();
             }
 
             await _tasksService.Create(model.Description);

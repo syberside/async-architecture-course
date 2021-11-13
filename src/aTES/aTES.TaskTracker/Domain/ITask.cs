@@ -2,12 +2,11 @@
 {
     public interface ITask
     {
-        public string PublicId { get; }
-
-        public bool IsCompeleted { get; }
-
-        public string Description { get; }
+        string PublicId { get; }
+        bool IsCompeleted { get; }
+        string Description { get; }
         string AssigneePublicId { get; }
         string AssigneeName { get; }
+        string FullName { get; }
     }
 }

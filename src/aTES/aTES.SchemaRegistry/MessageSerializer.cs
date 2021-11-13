@@ -2,7 +2,7 @@
 
 namespace aTES.SchemaRegistry
 {
-    public class Serializer
+    public class MessageSerializer
     {
         public string Serialize<T>(T message) where T : IMessage
         {

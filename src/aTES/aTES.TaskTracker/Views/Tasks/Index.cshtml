@@ -16,7 +16,7 @@
         @foreach (var task in Model.Tasks)
         {
             <tr>
-                <td>@task.Task.Description</td>
+                <td>@task.Task.FullName</td>
                 <td>@task.Task.AssigneeName</td>
                 <td>@task.Task.IsCompeleted</td>
                 <td>
@@ -47,7 +47,8 @@
 
 <hr />
 <h1>Add new task</h1>
-<form asp-action="Create">
+<partial name="_ValidationSummary" />
+<form asp-action="Index">
     <div class="mb-3">
         <label for="Description" class="form-label">What to do?</label>
         <input type="text" name="Description" class="form-control" id="Description">

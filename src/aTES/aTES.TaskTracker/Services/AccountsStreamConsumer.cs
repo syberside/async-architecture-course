@@ -17,10 +17,10 @@ namespace aTES.TaskTracker.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AccountsStreamConsumer> _logger;
-        private readonly Serializer _serializer;
+        private readonly MessageSerializer _serializer;
 
 
-        public AccountsStreamConsumer(IServiceProvider serviceProvider, ILogger<AccountsStreamConsumer> logger, Serializer serializer)
+        public AccountsStreamConsumer(IServiceProvider serviceProvider, ILogger<AccountsStreamConsumer> logger, MessageSerializer serializer)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
