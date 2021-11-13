@@ -1,6 +1,6 @@
 ﻿namespace aTES.SchemaRegistry.Tasks
 {
-    public class TaskUpdatedMessage
+    public class TaskUpdatedMessage : IMessage
     {
         public string Id { get; set; }
 

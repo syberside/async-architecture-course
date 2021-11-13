@@ -1,11 +1,11 @@
-﻿using aTES.SchemaRegistry.Users;
+﻿using aTES.SchemaRegistry;
+using aTES.SchemaRegistry.Users;
 using aTES.TaskTracker.DataLayer;
 using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading;
@@ -17,12 +17,14 @@ namespace aTES.TaskTracker.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AccountsStreamConsumer> _logger;
+        private readonly Serializer _serializer;
 
 
-        public AccountsStreamConsumer(IServiceProvider serviceProvider, ILogger<AccountsStreamConsumer> logger)
+        public AccountsStreamConsumer(IServiceProvider serviceProvider, ILogger<AccountsStreamConsumer> logger, Serializer serializer)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
+            _serializer = serializer;
         }
 
 
@@ -66,7 +68,7 @@ namespace aTES.TaskTracker.Services
                     _logger.LogInformation("Waiting for new message");
                     var messageJson = builder.Consume(stoppingToken);
                     _logger.LogInformation("RECEIVED: {0}", messageJson.Message.Value);
-                    var message = JsonConvert.DeserializeObject<UserUpdatedMessage>(messageJson.Message.Value);
+                    var message = _serializer.Deserialize<UserUpdatedMessage>(messageJson.Message.Value);
                     using (var scope = _serviceProvider.CreateScope())
                     {
                         var dbContext = scope.ServiceProvider.GetRequiredService<TasksDbContext>();

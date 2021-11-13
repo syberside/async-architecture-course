@@ -1,8 +1,8 @@
 ﻿using aTES.Identity.Domain;
+using aTES.SchemaRegistry;
 using aTES.SchemaRegistry.Users;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using DtoRole = aTES.SchemaRegistry.Users.Roles;
@@ -14,8 +14,9 @@ namespace aTES.Identity.Services
         //private readonly IProducer<string, UserUpdatedMessage> _producer;
         private readonly IProducer<string, string> _producer;
         private readonly ILogger<MessageBus> _logger;
+        private readonly Serializer _serializer;
 
-        public MessageBus(ILogger<MessageBus> logger)
+        public MessageBus(ILogger<MessageBus> logger, Serializer serializer)
         {
             var config = new ProducerConfig
             {
@@ -27,6 +28,7 @@ namespace aTES.Identity.Services
             //    .Build();
             _producer = new ProducerBuilder<string, string>(config).Build();
             _logger = logger;
+            _serializer = serializer;
         }
 
         public async Task SendUserUpdatedStreamEvent(IUser user)
@@ -43,7 +45,7 @@ namespace aTES.Identity.Services
             //    Key = user.PublicId,
             //    Value = message,
             //});
-            var messageJson = JsonConvert.SerializeObject(message);
+            var messageJson = _serializer.Serialize(message);
             var deliveryResult = await _producer.ProduceAsync(Topics.USERS_STREAM_LEGACY, new Message<string, string>
             {
                 Key = user.PublicId,

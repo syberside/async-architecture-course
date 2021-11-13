@@ -1,8 +1,8 @@
-﻿using aTES.SchemaRegistry.Tasks;
+﻿using aTES.SchemaRegistry;
+using aTES.SchemaRegistry.Tasks;
 using aTES.TaskTracker.Domain;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using TaskStatus = aTES.SchemaRegistry.Tasks.TaskStatus;
@@ -14,8 +14,9 @@ namespace aTES.TaskTracker.Services
         //private readonly IProducer<string, UserUpdatedMessage> _producer;
         private readonly IProducer<string, string> _producer;
         private readonly ILogger<MessageBus> _logger;
+        private readonly Serializer _serializer;
 
-        public MessageBus(ILogger<MessageBus> logger)
+        public MessageBus(ILogger<MessageBus> logger, Serializer serializer)
         {
             var config = new ProducerConfig
             {
@@ -27,6 +28,7 @@ namespace aTES.TaskTracker.Services
             //    .Build();
             _producer = new ProducerBuilder<string, string>(config).Build();
             _logger = logger;
+            _serializer = serializer;
         }
 
         public async Task SendTaskUpdatedStreamEvent(ITask task)
@@ -70,9 +72,9 @@ namespace aTES.TaskTracker.Services
             await Send(message, Topics.TASKS_WORKFLOW_LEGACY, task.PublicId);
         }
 
-        private async Task Send<T>(T message, string topicName, string key)
+        private async Task Send<T>(T message, string topicName, string key) where T : IMessage
         {
-            var messageJson = JsonConvert.SerializeObject(message);
+            var messageJson = _serializer.Serialize(message);
             var deliveryResult = await _producer.ProduceAsync(topicName, new Message<string, string>
             {
                 Key = key,

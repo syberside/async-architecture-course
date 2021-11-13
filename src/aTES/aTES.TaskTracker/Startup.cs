@@ -52,6 +52,7 @@ namespace aTES.TaskTracker
             services
                 .AddTransient<MessageBus>()
                 .AddTransient<TasksService>()
+                .AddTransient<Serializer>()
                 .AddHostedService<AccountsStreamConsumer>();
         }
 
