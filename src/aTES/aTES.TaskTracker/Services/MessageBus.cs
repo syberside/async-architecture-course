@@ -1,9 +1,11 @@
-﻿using aTES.TaskTracker.Domain;
+﻿using aTES.SchemaRegistry.Tasks;
+using aTES.TaskTracker.Domain;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using TaskStatus = aTES.SchemaRegistry.Tasks.TaskStatus;
 
 namespace aTES.TaskTracker.Services
 {
@@ -36,7 +38,7 @@ namespace aTES.TaskTracker.Services
                 AssigneeId = task.AssigneePublicId,
                 Status = task.IsCompeleted ? TaskStatus.Completed : TaskStatus.Assigned,
             };
-            await Send(message, "tasks-cud", task.PublicId);
+            await Send(message, Topics.TASKS_STREAMING_LEGACY, task.PublicId);
         }
 
         public async Task SendTaskCreatedEvent(ITask task)
@@ -46,7 +48,7 @@ namespace aTES.TaskTracker.Services
                 Id = task.PublicId,
                 Description = task.Description,
             };
-            await Send(message, "tasks", task.PublicId);
+            await Send(message, Topics.TASKS_WORKFLOW_LEGACY, task.PublicId);
         }
 
         public async Task SendTaskAssignedEvent(ITask task)
@@ -56,7 +58,7 @@ namespace aTES.TaskTracker.Services
                 Id = task.PublicId,
                 AssigneeId = task.AssigneePublicId,
             };
-            await Send(message, "tasks", task.PublicId);
+            await Send(message, Topics.TASKS_WORKFLOW_LEGACY, task.PublicId);
         }
 
         public async Task SendTaskCompletedEvent(ITask task)
@@ -65,20 +67,20 @@ namespace aTES.TaskTracker.Services
             {
                 Id = task.PublicId,
             };
-            await Send(message, "tasks", task.PublicId);
+            await Send(message, Topics.TASKS_WORKFLOW_LEGACY, task.PublicId);
         }
 
-        private async Task Send<T>(T message, string logName, string key)
+        private async Task Send<T>(T message, string topicName, string key)
         {
             var messageJson = JsonConvert.SerializeObject(message);
-            var deliveryResult = await _producer.ProduceAsync(logName, new Message<string, string>
+            var deliveryResult = await _producer.ProduceAsync(topicName, new Message<string, string>
             {
                 Key = key,
                 Value = messageJson,
             });
             _logger.LogInformation("Message {0} delivered to log {1} with offset {2} to partition {3} and status {4}",
                 messageJson,
-                logName,
+                topicName,
                 deliveryResult.Offset,
                 deliveryResult.Partition,
                 deliveryResult.Status);
@@ -87,40 +89,6 @@ namespace aTES.TaskTracker.Services
         public void Dispose()
         {
             _producer?.Dispose();
-        }
-
-        public class TaskUpdatedMessage
-        {
-            public string Id { get; set; }
-
-            public string Description { get; set; }
-
-            public string AssigneeId { get; set; }
-
-            public TaskStatus Status { get; set; }
-        }
-
-        public class TaskCreatedMessage
-        {
-            public string Id { get; set; }
-            public string Description { get; set; }
-        }
-
-        public class TaskAssignedMessage
-        {
-            public string Id { get; set; }
-            public string AssigneeId { get; set; }
-        }
-
-        public class TaskCompletedMessage
-        {
-            public string Id { get; set; }
-        }
-
-        public enum TaskStatus
-        {
-            Assigned = 1,
-            Completed = 2,
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using aTES.Identity.Domain;
+using aTES.SchemaRegistry.Users;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using DtoRole = aTES.SchemaRegistry.Users.Roles;
+using Roles = aTES.Identity.Domain.Roles;
 
 namespace aTES.Identity.Services
 {
@@ -32,7 +35,7 @@ namespace aTES.Identity.Services
             var message = new UserUpdatedMessage
             {
                 Id = user.PublicId,
-                Role = user.Role,
+                Role = MapToDtoRole(user.Role),
                 Username = user.Username,
             };
             //var deliveryResult = await _producer.ProduceAsync("accounts-cud", new Message<string, UserUpdatedMessage>
@@ -41,7 +44,7 @@ namespace aTES.Identity.Services
             //    Value = message,
             //});
             var messageJson = JsonConvert.SerializeObject(message);
-            var deliveryResult = await _producer.ProduceAsync("accounts-cud", new Message<string, string>
+            var deliveryResult = await _producer.ProduceAsync(Topics.USERS_STREAM_LEGACY, new Message<string, string>
             {
                 Key = user.PublicId,
                 Value = messageJson,
@@ -54,16 +57,21 @@ namespace aTES.Identity.Services
 
         }
 
+        public DtoRole MapToDtoRole(Roles role)
+        {
+            switch (role)
+            {
+                case Roles.Admin: return DtoRole.Admin;
+                case Roles.Manager: return DtoRole.Manager;
+                case Roles.RegularPopug: return DtoRole.RegularPopug;
+                case Roles.SuperUser: return DtoRole.SuperUser;
+                default: throw new NotSupportedException();
+            }
+        }
+
         public void Dispose()
         {
             _producer?.Dispose();
-        }
-
-        public class UserUpdatedMessage
-        {
-            public string Id { get; set; }
-            public string Username { get; set; }
-            public Roles Role { get; set; }
         }
     }
 }
