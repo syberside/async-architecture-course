@@ -13,6 +13,10 @@
         foreach (var item in users)
         {
             <form asp-action="UpdateRole" id="@item.PublicId"></form>
+            @if (ViewData["CanTriggerStreaming"] != null)
+            {
+                <form asp-action="StreamUserData" id="@item.PublicId-stream"></form>
+            }
         }
 
         <table>
@@ -50,7 +54,13 @@
                                     Update
                                 </button>
                             }
-
+                            @if (ViewData["CanTriggerStreaming"] != null)
+                            {
+                                <input type="hidden" form="@item.PublicId-stream" value="@item.PublicId" name="Id">
+                                <button form="@item.PublicId-stream" onClick="this.form.submit(); this.disabled=true;">
+                                    Stream
+                                </button>
+                            }
                         </td>
                     </tr>
                 }

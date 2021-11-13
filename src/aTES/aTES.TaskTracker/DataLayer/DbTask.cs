@@ -34,7 +34,7 @@ namespace aTES.TaskTracker.DataLayer
 
 
         [NotMapped]
-        public string FullName => "[UBERPOP-" + SequenceValue + "] " + Description;
+        public string JiraId => "UBERPOP-" + SequenceValue;
 
 
         [NotMapped]

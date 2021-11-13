@@ -55,3 +55,12 @@
     </div>
     <button type="submit" class="btn btn-primary" onclick="this.form.submit(); this.disabled=true;">Add</button>
 </form>
+
+@if (Model.CanStreamAllTasks)
+{
+    <hr />
+    <h1>SUDO Zone</h1>
+    <form asp-action="StreamTasks">
+        <button type="submit" class="btn btn-primary" onclick="this.form.submit(); this.disabled=true;">Stream current state</button>
+    </form>
+}

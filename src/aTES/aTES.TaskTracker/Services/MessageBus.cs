@@ -33,14 +33,21 @@ namespace aTES.TaskTracker.Services
 
         public async Task SendTaskUpdatedStreamEvent(ITask task)
         {
-            var message = new TaskUpdatedMessage
+            var message = new TaskUpdatedMessage_V1
             {
-                Id = task.PublicId,
-                Description = task.Description,
-                AssigneeId = task.AssigneePublicId,
-                Status = task.IsCompeleted ? TaskStatus.Completed : TaskStatus.Assigned,
+                EventCreatedAt = DateTime.Now,
+                EventId = Guid.NewGuid(),
+                EventProducer = "TaskService",
+                Payload = new TaskUpdatedMessage_V1.Data
+                {
+                    AssigneeId = task.AssigneePublicId,
+                    Description = task.Description,
+                    Id = task.PublicId,
+                    JiraId = task.JiraId,
+                    Status = task.IsCompeleted ? TaskStatus.Completed : TaskStatus.Assigned,
+                }
             };
-            await Send(message, Topics.TASKS_STREAMING_LEGACY, task.PublicId);
+            await Send(message, Topics.TASKS_STREAMING, task.PublicId);
         }
 
         public async Task SendTaskCreatedEvent(ITask task)

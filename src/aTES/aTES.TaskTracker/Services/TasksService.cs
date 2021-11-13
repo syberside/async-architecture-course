@@ -73,6 +73,15 @@ namespace aTES.TaskTracker.Services
             }
         }
 
+        public async Task StreamCurrentState()
+        {
+            var tasks = await _dbContext.Tasks.Include(x => x.AssignedUser).AsNoTracking().ToArrayAsync();
+            foreach (var task in tasks)
+            {
+                await _messageBus.SendTaskUpdatedStreamEvent(task);
+            }
+        }
+
         public async Task<Roles> GetRole(string publicUserId)
         {
             var user = await _dbContext.Users.Where(x => x.PublicId == publicUserId).FirstAsync();

@@ -66,5 +66,11 @@ namespace aTES.Identity.Services
             await _dbContext.SaveChangesAsync();
             await _messageBus.SendUserUpdatedStreamEvent(user);
         }
+
+        public async Task StreamUser(Guid id)
+        {
+            var user = await _dbContext.Users.FirstAsync(x => x.Id == id);
+            await _messageBus.SendUserUpdatedStreamEvent(user);
+        }
     }
 }

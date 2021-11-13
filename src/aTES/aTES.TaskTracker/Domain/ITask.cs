@@ -7,6 +7,8 @@
         string Description { get; }
         string AssigneePublicId { get; }
         string AssigneeName { get; }
-        string FullName { get; }
+
+        string JiraId { get; }
+        string FullName => $"[{JiraId}] {Description}";
     }
 }

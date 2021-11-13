@@ -32,7 +32,8 @@ namespace aTES.TaskTracker.Controllers
             {
                 Tasks = tasks,
                 OnlyMyTasks = onlyMyTasks,
-                CanAssignTasks = await CanUserReassignTasks()
+                CanAssignTasks = await CanUserReassignTasks(),
+                CanStreamAllTasks = await CanUserStreamTasks(),
             };
             return View(vm);
         }
@@ -77,6 +78,18 @@ namespace aTES.TaskTracker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> StreamTasks()
+        {
+            if (!await CanUserStreamTasks())
+            {
+                return Forbid();
+            }
+
+            await _tasksService.StreamCurrentState();
+            return RedirectToAction("Index");
+        }
+
         private async Task<bool> CanUserReassignTasks()
         {
             var role = await _tasksService.GetRole(CurrentUserPublicId());
@@ -85,6 +98,12 @@ namespace aTES.TaskTracker.Controllers
             //var roleString = User.Claims.First(x => x.Type == "PopugRole")?.Value;
             //var role = Enum.Parse<Roles>(roleString);
             //return role == Roles.Admin || role == Roles.Manager;
+        }
+
+        private async Task<bool> CanUserStreamTasks()
+        {
+            var role = await _tasksService.GetRole(CurrentUserPublicId());
+            return role == Roles.SuperUser;
         }
     }
 }

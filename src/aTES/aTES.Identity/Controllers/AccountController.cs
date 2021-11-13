@@ -147,6 +147,5 @@ namespace aTES.Identity.Controllers
         {
             return View();
         }
-
     }
 }
