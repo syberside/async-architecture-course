@@ -41,6 +41,18 @@ namespace aTES.Billing.Controllers
             });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CloseDay()
+        {
+            var role = await GetCurrentUserRole();
+            if (role != Roles.Acounter)
+            {
+                return Forbid();
+            }
+            await _accountingService.CloseDay();
+            return RedirectToAction("Index");
+        }
+
         public IActionResult Privacy()
         {
             return View();

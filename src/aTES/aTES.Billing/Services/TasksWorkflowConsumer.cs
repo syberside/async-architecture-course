@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace aTES.Billing.Services
 {
-    public class TasksStreamConsumer : BackgroundService
+    public class TasksWorkflowConsumer : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<TasksStreamConsumer> _logger;
+        private readonly ILogger<TasksWorkflowConsumer> _logger;
         private readonly MessageSerializer _serializer;
 
-        public TasksStreamConsumer(IServiceProvider serviceProvider, ILogger<TasksStreamConsumer> logger, MessageSerializer serializer)
+        public TasksWorkflowConsumer(IServiceProvider serviceProvider, ILogger<TasksWorkflowConsumer> logger, MessageSerializer serializer)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;

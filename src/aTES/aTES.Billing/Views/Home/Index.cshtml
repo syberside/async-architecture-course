@@ -12,6 +12,12 @@
         <div class="container">
             TODAY TOTAL: @Model.TodayTotal$
         </div>
+        <form asp-action="CloseDay">
+            <button type="submit" onclick="this.form.submit(); this.disabled=true;"
+                    class="btn btn-danger">
+                CLOSE DAY
+            </button>
+        </form>
 
     }
 

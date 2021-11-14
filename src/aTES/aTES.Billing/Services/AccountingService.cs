@@ -10,13 +10,15 @@ namespace aTES.Billing.Services
     public class AccountingService
     {
         private readonly BillingDbContext _dbContext;
+        private readonly MessageBus _messageBus;
 
-        public AccountingService(BillingDbContext dbContext)
+        public AccountingService(BillingDbContext dbContext, MessageBus messageBus)
         {
             _dbContext = dbContext;
+            _messageBus = messageBus;
         }
 
-        public async Task LogTransaction(string assigneeId, int credit, int debit, string details)
+        public async Task LogTransaction(string assigneeId, long credit, long debit, string details)
         {
             var user = await _dbContext.Users.FirstAsync(x => x.PublicId == assigneeId);
             var logRecord = new DbTransactionLogRecord
@@ -52,6 +54,11 @@ namespace aTES.Billing.Services
                 .Where(x => begin <= x.CreatedAt && x.CreatedAt <= end)
                 .SumAsync(x => x.Credit + x.Debit);
             return result * -1;
+        }
+
+        public async Task CloseDay()
+        {
+            await _messageBus.SendOperationDayClosedEvent();
         }
     }
 }

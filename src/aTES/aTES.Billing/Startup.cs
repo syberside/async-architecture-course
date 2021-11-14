@@ -58,7 +58,8 @@ namespace aTES.Billing
                 .AddTransient<TasksService>()
                 .AddTransient<MessageSerializer>()
                 .AddSingleton(sp => new Random(DateTime.Now.Millisecond))
-                .AddHostedService<TasksStreamConsumer>()
+                .AddHostedService<BillingCycleConsumer>()
+                .AddHostedService<TasksWorkflowConsumer>()
                 .AddHostedService<AccountsStreamConsumer>();
         }
 
