@@ -39,7 +39,32 @@ namespace aTES.Identity.Configs
                 // interactive ASP.NET Core MVC client (cookie based)
                 new Client
                 {
-                    ClientId = "mvc",
+                    ClientId = "billing",
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.Code,
+
+                    // where to redirect to after login
+                    RedirectUris = { "https://localhost:5021/signin-oidc" },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "https://localhost:5021/signout-callback-oidc" },
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                         "PopugRole"
+                    },
+                    Claims=new []
+                    {
+                        new ClientClaim("PopugRole", "PopugRole")
+                    }
+                },
+                // interactive ASP.NET Core MVC client (cookie based)
+                new Client
+                {
+                    ClientId = "task-tracker",
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
                     AllowedGrantTypes = GrantTypes.Code,

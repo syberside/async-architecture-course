@@ -55,7 +55,8 @@
     "aTES full (debug)": {
       "Projects": {
         "aTES.Identity": {},
-        "aTES.TaskTRacker": {}
+        "aTES.TaskTRacker": {},
+        "aTES.Billing": {}
       },
       "SolutionConfiguration": "Debug"
     }
