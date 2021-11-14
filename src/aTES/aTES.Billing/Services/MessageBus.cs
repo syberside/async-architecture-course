@@ -1,15 +1,14 @@
-﻿using aTES.Identity.Domain;
-using aTES.SchemaRegistry;
-using aTES.SchemaRegistry.Users;
+﻿using aTES.SchemaRegistry;
+using aTES.SchemaRegistry.Tasks;
+using aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using DtoRole = aTES.SchemaRegistry.Users.Roles;
 
-namespace aTES.Identity.Services
+namespace aTES.Billing.Services
 {
-    public class MessageBus : IDisposable
+    public class MessageBus
     {
         private readonly IProducer<string, string> _producer;
         private readonly ILogger<MessageBus> _logger;
@@ -26,19 +25,24 @@ namespace aTES.Identity.Services
             _serializer = serializer;
         }
 
-        public async Task SendUserUpdatedStreamEvent(IUser user)
+        public async Task SendTaskEstimatedEvent(string publicId, int birdInCageCost, int milletInABowlCost)
         {
-            var message = new UserUpdatedMessage
+            var message = new TaskEstimatedMessage_v1
             {
-                Id = user.PublicId,
-                //Note: dirty solution, but enough for study project
-                Role = (DtoRole)user.Role,
-                Username = user.Username,
+                EventCreatedAt = DateTime.Now,
+                EventId = Guid.NewGuid(),
+                EventProducer = "BillingService",
+                Payload = new TaskEstimatedMessage_v1.Data
+                {
+                    Id = publicId,
+                    BirdInACageCost = birdInCageCost,
+                    MilletInABowlCost = milletInABowlCost,
+                }
             };
             var messageJson = _serializer.Serialize(message);
-            var deliveryResult = await _producer.ProduceAsync(Topics.USERS_STREAM_LEGACY, new Message<string, string>
+            var deliveryResult = await _producer.ProduceAsync(Topics.TASKS_BILLING, new Message<string, string>
             {
-                Key = user.PublicId,
+                Key = publicId,
                 Value = messageJson,
             });
             _logger.LogInformation("Message {0} delivered with offset {1} to partition {2} and status {3}",
@@ -46,12 +50,6 @@ namespace aTES.Identity.Services
                 deliveryResult.Offset,
                 deliveryResult.Partition,
                 deliveryResult.Status);
-
-        }
-
-        public void Dispose()
-        {
-            _producer?.Dispose();
         }
     }
 }

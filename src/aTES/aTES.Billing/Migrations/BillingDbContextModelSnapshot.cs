@@ -26,7 +26,7 @@ namespace aTES.Billing.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("AssignedUserId")
+                    b.Property<Guid?>("AssignedUserId")
                         .HasColumnType("uuid")
                         .HasColumnName("assigned_user_id");
 
@@ -126,9 +126,7 @@ namespace aTES.Billing.Migrations
                 {
                     b.HasOne("aTES.Billing.DataAccess.DbUser", "AssignedUser")
                         .WithMany()
-                        .HasForeignKey("AssignedUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AssignedUserId");
 
                     b.Navigation("AssignedUser");
                 });

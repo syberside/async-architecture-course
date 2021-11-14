@@ -1,11 +1,12 @@
-﻿using System;
+﻿using aTES.Billing.Services;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace aTES.Billing.DataAccess
 {
     [Table("tasks")]
-    public class DbTask
+    public class DbTask : ITask
     {
         [Key]
         [Column("id")]
@@ -23,7 +24,7 @@ namespace aTES.Billing.DataAccess
 
 
         [Column("assigned_user_id")]
-        public Guid AssignedUserId { get; set; }
+        public Guid? AssignedUserId { get; set; }
 
         public virtual DbUser AssignedUser { get; set; }
 
@@ -34,5 +35,9 @@ namespace aTES.Billing.DataAccess
         public int BirdInCageCost { get; set; }
 
         public int MilletInABowlCost { get; set; }
+
+        public string FullName => $"[{JiraId}] {Description}";
+
+        public string AssigneeId => AssignedUser.PublicId;
     }
 }

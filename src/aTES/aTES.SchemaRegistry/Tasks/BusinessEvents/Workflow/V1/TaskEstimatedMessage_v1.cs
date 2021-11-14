@@ -1,11 +1,11 @@
 ﻿using System;
-using static aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1.BirdInACageMessage_v1;
+using static aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1.TaskEstimatedMessage_v1;
 
 namespace aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1
 {
-    public class BirdInACageMessage_v1 : IVersionedMessage<Data>
+    public class TaskEstimatedMessage_v1 : IVersionedMessage<Data>
     {
-        public const string EVENT_TYPE = "BirdInACage";
+        public const string EVENT_TYPE = "TaskEstimated";
 
         public Guid EventId { get; set; }
 
@@ -22,8 +22,8 @@ namespace aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1
         public class Data : IMessagePayload
         {
             public string Id { get; set; }
-
-            public string AssigneeId { get; set; }
+            public int BirdInACageCost { get; set; }
+            public int MilletInABowlCost { get; set; }
         }
     }
 }
