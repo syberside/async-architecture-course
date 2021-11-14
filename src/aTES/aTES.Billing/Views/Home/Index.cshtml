@@ -7,6 +7,15 @@
     <h1 class="display-4">Welcome</h1>
     <h2>Your balance is @Model.CurrentBalance$</h2>
 
+    @if (Model.TodayTotal != null)
+    {
+        <div class="container">
+            TODAY TOTAL: @Model.TodayTotal$
+        </div>
+
+    }
+
+
     <table class="table">
         <thead>
             <tr>

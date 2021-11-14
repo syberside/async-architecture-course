@@ -1,3 +1,4 @@
+using aTES.Billing.Controllers;
 using aTES.Billing.DataAccess;
 using aTES.Billing.Services;
 using aTES.SchemaRegistry;
@@ -51,6 +52,7 @@ namespace aTES.Billing
                });
 
             services
+                .AddTransient<UserService>()
                 .AddTransient<AccountingService>()
                 .AddTransient<MessageBus>()
                 .AddTransient<TasksService>()

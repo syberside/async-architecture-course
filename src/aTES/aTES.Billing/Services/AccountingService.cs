@@ -42,5 +42,16 @@ namespace aTES.Billing.Services
                 .ToArrayAsync();
             return (user.Balance, logRecords);
         }
+
+        public async Task<long> GetTodayTotal()
+        {
+            var today = DateTime.Now;
+            var begin = new DateTime(today.Year, today.Month, today.Day);
+            var end = begin.AddDays(1).AddSeconds(-1);
+            var result = await _dbContext.Transactions.AsNoTracking()
+                .Where(x => begin <= x.CreatedAt && x.CreatedAt <= end)
+                .SumAsync(x => x.Credit + x.Debit);
+            return result * -1;
+        }
     }
 }
