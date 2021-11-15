@@ -10,5 +10,14 @@ namespace aTES.TaskTracker.DataLayer
 
         public virtual DbSet<DbUser> Users { get; set; }
         public virtual DbSet<DbTask> Tasks { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasSequence<int>("tasks-jira-id");
+
+            modelBuilder.Entity<DbTask>()
+                .Property(o => o.SequenceValue)
+                .HasDefaultValueSql("nextval('\"tasks-jira-id\"')");
+        }
     }
 }

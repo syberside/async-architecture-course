@@ -27,11 +27,14 @@ namespace aTES.Identity.Controllers
         [Authorize]
         public async Task<IActionResult> UserManagementAsync()
         {
-            var userName = User.GetUserName();
-            var user = await _usersStore.GetByUsername(userName);
-            if (user.Role.CanAdministerUsers())
+            var role = await GetCurrentUserRole();
+            if (role.CanAdministerUsers())
             {
                 ViewData["ShowUsers"] = true;
+            }
+            if (role == Roles.SuperUser)
+            {
+                ViewData["CanTriggerStreaming"] = true;
             }
             return View(new CreateUserModel());
         }
@@ -40,7 +43,8 @@ namespace aTES.Identity.Controllers
         [HttpPost]
         public async Task<IActionResult> UserManagementAsync(CreateUserModel model)
         {
-            if (!await ValidateAccess())
+            var role = await GetCurrentUserRole();
+            if (!role.CanAdministerUsers())
             {
                 return Forbid();
             }
@@ -64,7 +68,8 @@ namespace aTES.Identity.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateRole(UpdateRoleModel model)
         {
-            if (!await ValidateAccess())
+            var role = await GetCurrentUserRole();
+            if (!role.CanAdministerUsers())
             {
                 return Forbid();
             }
@@ -83,12 +88,25 @@ namespace aTES.Identity.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private async Task<bool> ValidateAccess()
+
+        private async Task<Roles> GetCurrentUserRole()
         {
             //TODO: replace with policy and read from claims
             var username = User.GetUserName();
             var user = await _usersStore.GetByUsername(username);
-            return user.Role.CanAdministerUsers();
+            return user.Role;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> StreamUserData(StreamDataModel model)
+        {
+            var role = await GetCurrentUserRole();
+            if (role != Roles.SuperUser)
+            {
+                return Forbid();
+            }
+            await _usersStore.StreamUser(model.Id);
+            return RedirectToAction("UserManagement");
         }
     }
 }

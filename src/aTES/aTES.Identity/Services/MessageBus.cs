@@ -1,9 +1,11 @@
 ﻿using aTES.Identity.Domain;
+using aTES.SchemaRegistry;
+using aTES.SchemaRegistry.Users;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using DtoRole = aTES.SchemaRegistry.Users.Roles;
 
 namespace aTES.Identity.Services
 {
@@ -12,8 +14,9 @@ namespace aTES.Identity.Services
         //private readonly IProducer<string, UserUpdatedMessage> _producer;
         private readonly IProducer<string, string> _producer;
         private readonly ILogger<MessageBus> _logger;
+        private readonly MessageSerializer _serializer;
 
-        public MessageBus(ILogger<MessageBus> logger)
+        public MessageBus(ILogger<MessageBus> logger, MessageSerializer serializer)
         {
             var config = new ProducerConfig
             {
@@ -25,23 +28,20 @@ namespace aTES.Identity.Services
             //    .Build();
             _producer = new ProducerBuilder<string, string>(config).Build();
             _logger = logger;
+            _serializer = serializer;
         }
 
-        public async Task SendUserUpdatedCUDEvent(IUser user)
+        public async Task SendUserUpdatedStreamEvent(IUser user)
         {
             var message = new UserUpdatedMessage
             {
                 Id = user.PublicId,
-                Role = user.Role,
+                //Note: dirty solution, but enough for study project
+                Role = (DtoRole)user.Role,
                 Username = user.Username,
             };
-            //var deliveryResult = await _producer.ProduceAsync("accounts-cud", new Message<string, UserUpdatedMessage>
-            //{
-            //    Key = user.PublicId,
-            //    Value = message,
-            //});
-            var messageJson = JsonConvert.SerializeObject(message);
-            var deliveryResult = await _producer.ProduceAsync("accounts-cud", new Message<string, string>
+            var messageJson = _serializer.Serialize(message);
+            var deliveryResult = await _producer.ProduceAsync(Topics.USERS_STREAM_LEGACY, new Message<string, string>
             {
                 Key = user.PublicId,
                 Value = messageJson,
@@ -57,13 +57,6 @@ namespace aTES.Identity.Services
         public void Dispose()
         {
             _producer?.Dispose();
-        }
-
-        public class UserUpdatedMessage
-        {
-            public string Id { get; set; }
-            public string Username { get; set; }
-            public Roles Role { get; set; }
         }
     }
 }

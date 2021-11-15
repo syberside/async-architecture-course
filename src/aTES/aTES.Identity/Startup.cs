@@ -1,6 +1,7 @@
 using aTES.Identity.Configs;
 using aTES.Identity.DataLayer;
 using aTES.Identity.Services;
+using aTES.SchemaRegistry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,8 @@ namespace aTES.Identity
                 //TODO: test only
                 .AddDeveloperSigningCredential();
             services.AddTransient<UsersStore>()
-                    .AddTransient<MessageBus>();
+                    .AddTransient<MessageBus>()
+                    .AddTransient<MessageSerializer>();
             services.AddDbContext<IdentityDbContext>();
         }
 

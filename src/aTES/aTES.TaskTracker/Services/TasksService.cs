@@ -20,8 +20,14 @@ namespace aTES.TaskTracker.Services
             _messageBus = messageBus;
         }
 
+        public bool IsValidTaskName(string name) => !name.Contains('[') && !name.Contains(']');
+
         public async Task Create(string description)
         {
+            if (!IsValidTaskName(description))
+            {
+                throw new ArgumentException();
+            }
             var taskId = Guid.NewGuid();
             var tasksDistribution = await DistibuteTasks(new[] { taskId });
             var assignee = tasksDistribution[taskId];
@@ -35,8 +41,8 @@ namespace aTES.TaskTracker.Services
             _dbContext.Add(newTask);
             await _dbContext.SaveChangesAsync();
             await _messageBus.SendTaskCreatedEvent(newTask);
-            await _messageBus.SendTaskAssignedEvent(newTask);
-            await _messageBus.SendTaskUpdatedCUDEvent(newTask);
+            await _messageBus.SendBirdInACageEvent(newTask);
+            await _messageBus.SendTaskUpdatedStreamEvent(newTask);
         }
 
         public async Task<ITask[]> ListAll(string userPublicId)
@@ -62,8 +68,17 @@ namespace aTES.TaskTracker.Services
             await _dbContext.SaveChangesAsync();
             foreach (var task in openTasks)
             {
-                await _messageBus.SendTaskAssignedEvent(task);
-                await _messageBus.SendTaskUpdatedCUDEvent(task);
+                await _messageBus.SendBirdInACageEvent(task);
+                await _messageBus.SendTaskUpdatedStreamEvent(task);
+            }
+        }
+
+        public async Task StreamCurrentState()
+        {
+            var tasks = await _dbContext.Tasks.Include(x => x.AssignedUser).AsNoTracking().ToArrayAsync();
+            foreach (var task in tasks)
+            {
+                await _messageBus.SendTaskUpdatedStreamEvent(task);
             }
         }
 
@@ -82,8 +97,8 @@ namespace aTES.TaskTracker.Services
             }
             task.IsCompeleted = true;
             await _dbContext.SaveChangesAsync();
-            await _messageBus.SendTaskCompletedEvent(task);
-            await _messageBus.SendTaskUpdatedCUDEvent(task);
+            await _messageBus.SendMilletInABowlEvent(task);
+            await _messageBus.SendTaskUpdatedStreamEvent(task);
             return true;
         }
 

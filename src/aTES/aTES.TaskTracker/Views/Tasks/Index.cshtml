@@ -16,7 +16,7 @@
         @foreach (var task in Model.Tasks)
         {
             <tr>
-                <td>@task.Task.Description</td>
+                <td>@task.Task.FullName</td>
                 <td>@task.Task.AssigneeName</td>
                 <td>@task.Task.IsCompeleted</td>
                 <td>
@@ -34,23 +34,33 @@
 
 <form id="complete_form" asp-action="CompleteTask"></form>
 
-@if (Model.CanAssignTasks)
+@if (Model.CanPutBirdInACage)
 {
     <hr />
-    <form asp-action="AssignOpenTickets">
+    <form asp-action="PutBirdsInACages">
         <button type="submit" onclick="this.form.submit(); this.disabled=true;"
                 class="btn btn-danger">
-            SHUFFLE!
+            Put birds in a cage
         </button>
     </form>
 }
 
 <hr />
 <h1>Add new task</h1>
-<form asp-action="Create">
+<partial name="_ValidationSummary" />
+<form asp-action="Index">
     <div class="mb-3">
         <label for="Description" class="form-label">What to do?</label>
         <input type="text" name="Description" class="form-control" id="Description">
     </div>
     <button type="submit" class="btn btn-primary" onclick="this.form.submit(); this.disabled=true;">Add</button>
 </form>
+
+@if (Model.CanStreamAllTasks)
+{
+    <hr />
+    <h1>SUDO Zone</h1>
+    <form asp-action="StreamTasks">
+        <button type="submit" class="btn btn-primary" onclick="this.form.submit(); this.disabled=true;">Stream current state</button>
+    </form>
+}

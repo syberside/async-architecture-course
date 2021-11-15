@@ -32,7 +32,8 @@ namespace aTES.TaskTracker.Controllers
             {
                 Tasks = tasks,
                 OnlyMyTasks = onlyMyTasks,
-                CanAssignTasks = await CanUserReassignTasks()
+                CanPutBirdInACage = await CanPutBirdsInACage(),
+                CanStreamAllTasks = await CanUserStreamTasks(),
             };
             return View(vm);
         }
@@ -43,11 +44,12 @@ namespace aTES.TaskTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CreateTaskModel model)
+        public async Task<IActionResult> IndexAsync(CreateTaskModel model)
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+
+                return await IndexAsync();
             }
 
             await _tasksService.Create(model.Description);
@@ -55,9 +57,9 @@ namespace aTES.TaskTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssignOpenTickets()
+        public async Task<IActionResult> PutBirdsInACages()
         {
-            if (!await CanUserReassignTasks())
+            if (!await CanPutBirdsInACage())
             {
                 return Forbid();
             }
@@ -76,7 +78,19 @@ namespace aTES.TaskTracker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> CanUserReassignTasks()
+        [HttpPost]
+        public async Task<IActionResult> StreamTasks()
+        {
+            if (!await CanUserStreamTasks())
+            {
+                return Forbid();
+            }
+
+            await _tasksService.StreamCurrentState();
+            return RedirectToAction("Index");
+        }
+
+        private async Task<bool> CanPutBirdsInACage()
         {
             var role = await _tasksService.GetRole(CurrentUserPublicId());
             return role == Roles.Admin || role == Roles.Manager;
@@ -84,6 +98,12 @@ namespace aTES.TaskTracker.Controllers
             //var roleString = User.Claims.First(x => x.Type == "PopugRole")?.Value;
             //var role = Enum.Parse<Roles>(roleString);
             //return role == Roles.Admin || role == Roles.Manager;
+        }
+
+        private async Task<bool> CanUserStreamTasks()
+        {
+            var role = await _tasksService.GetRole(CurrentUserPublicId());
+            return role == Roles.SuperUser;
         }
     }
 }

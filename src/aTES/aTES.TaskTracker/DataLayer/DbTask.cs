@@ -27,12 +27,23 @@ namespace aTES.TaskTracker.DataLayer
         [Required]
         public virtual DbUser AssignedUser { get; set; }
 
+
+        [Required]
+        [Column("sequence_value")]
+        public int SequenceValue { get; set; }
+
+
+        [NotMapped]
+        public string JiraId => "UBERPOP-" + SequenceValue;
+
+
+        [NotMapped]
+        public string AssigneeName => AssignedUser.Username;
+
         [NotMapped]
         public string PublicId => Id.ToString();
 
         [NotMapped]
         public string AssigneePublicId => AssignedUser.PublicId;
-
-        public string AssigneeName => AssignedUser.Username;
     }
 }

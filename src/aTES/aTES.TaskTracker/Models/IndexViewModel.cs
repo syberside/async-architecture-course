@@ -9,7 +9,8 @@ namespace aTES.TaskTracker.Models
 
         public bool OnlyMyTasks { get; set; }
 
-        public bool CanAssignTasks { get; set; }
+        public bool CanPutBirdInACage { get; set; }
+        public bool CanStreamAllTasks { get; internal set; }
     }
 
     public class TaskViewModel

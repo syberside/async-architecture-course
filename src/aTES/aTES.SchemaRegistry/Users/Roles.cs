@@ -1,4 +1,4 @@
-﻿namespace aTES.TaskTracker.Domain
+﻿namespace aTES.SchemaRegistry.Users
 {
     public enum Roles
     {

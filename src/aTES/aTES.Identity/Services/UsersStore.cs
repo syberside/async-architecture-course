@@ -56,7 +56,7 @@ namespace aTES.Identity.Services
             };
             _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
-            await _messageBus.SendUserUpdatedCUDEvent(newUser);
+            await _messageBus.SendUserUpdatedStreamEvent(newUser);
         }
 
         public async Task UpdateRole(Guid id, Roles role)
@@ -64,7 +64,13 @@ namespace aTES.Identity.Services
             var user = await _dbContext.Users.FirstAsync(x => x.Id == id);
             user.Role = role;
             await _dbContext.SaveChangesAsync();
-            await _messageBus.SendUserUpdatedCUDEvent(user);
+            await _messageBus.SendUserUpdatedStreamEvent(user);
+        }
+
+        public async Task StreamUser(Guid id)
+        {
+            var user = await _dbContext.Users.FirstAsync(x => x.Id == id);
+            await _messageBus.SendUserUpdatedStreamEvent(user);
         }
     }
 }

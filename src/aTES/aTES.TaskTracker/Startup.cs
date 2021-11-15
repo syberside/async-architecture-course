@@ -1,3 +1,4 @@
+using aTES.SchemaRegistry;
 using aTES.TaskTracker.DataLayer;
 using aTES.TaskTracker.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -52,7 +53,9 @@ namespace aTES.TaskTracker
             services
                 .AddTransient<MessageBus>()
                 .AddTransient<TasksService>()
-                .AddHostedService<AccountsCUDEventsConsumer>();
+                .AddTransient<MessageSerializer>()
+                .AddHostedService<TasksStreamConsumer>()
+                .AddHostedService<AccountsStreamConsumer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
