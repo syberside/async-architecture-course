@@ -29,7 +29,7 @@ namespace aTES.Billing.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     publicid = table.Column<string>(name: "public-id", type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
-                    assigned_user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    assigned_user_id = table.Column<Guid>(type: "uuid", nullable: true),
                     JiraId = table.Column<string>(type: "text", nullable: false),
                     BirdInCageCost = table.Column<int>(type: "integer", nullable: false),
                     MilletInABowlCost = table.Column<int>(type: "integer", nullable: false)
@@ -42,7 +42,7 @@ namespace aTES.Billing.Migrations
                         column: x => x.assigned_user_id,
                         principalTable: "users",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

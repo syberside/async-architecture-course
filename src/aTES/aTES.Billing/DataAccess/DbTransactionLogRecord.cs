@@ -1,11 +1,12 @@
-﻿using System;
+﻿using aTES.Billing.Controllers;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace aTES.Billing.DataAccess
 {
     [Table("transaction_log")]
-    public class DbTransactionLogRecord
+    public class DbTransactionLogRecord : IAuditLogEntry
     {
         [Key]
         [Column("id")]

@@ -11,7 +11,6 @@ namespace aTES.Identity.Services
 {
     public class MessageBus : IDisposable
     {
-        //private readonly IProducer<string, UserUpdatedMessage> _producer;
         private readonly IProducer<string, string> _producer;
         private readonly ILogger<MessageBus> _logger;
         private readonly MessageSerializer _serializer;
@@ -22,10 +21,6 @@ namespace aTES.Identity.Services
             {
                 BootstrapServers = "localhost:9092",
             };
-            //https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/JsonSerialization/Program.cs
-            //_producer = new ProducerBuilder<string, UserUpdatedMessage>(config)
-            //    .SetValueSerializer(new JsonSerializer<Person>(schemaRegistry, jsonSerializerConfig))
-            //    .Build();
             _producer = new ProducerBuilder<string, string>(config).Build();
             _logger = logger;
             _serializer = serializer;

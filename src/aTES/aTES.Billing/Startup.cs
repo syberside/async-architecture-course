@@ -1,4 +1,7 @@
+using aTES.Billing.Controllers;
 using aTES.Billing.DataAccess;
+using aTES.Billing.Services;
+using aTES.SchemaRegistry;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace aTES.Billing
@@ -46,6 +50,17 @@ namespace aTES.Billing
                    options.ClaimActions.Clear();
                    options.ClaimActions.MapJsonKey("PopugRole", "PopugRole");
                });
+
+            services
+                .AddTransient<UserService>()
+                .AddTransient<AccountingService>()
+                .AddTransient<MessageBus>()
+                .AddTransient<TasksService>()
+                .AddTransient<MessageSerializer>()
+                .AddSingleton(sp => new Random(DateTime.Now.Millisecond))
+                .AddHostedService<BillingCycleConsumer>()
+                .AddHostedService<TasksWorkflowConsumer>()
+                .AddHostedService<AccountsStreamConsumer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,5 +7,6 @@
 
         public static string TASKS_WORKFLOW_LEGACY = "tasks";
         public static string TASKS_WORKFLOW = "tasks-workflow";
+        public static string TASKS_BILLING = "tasks-billing";
     }
 }

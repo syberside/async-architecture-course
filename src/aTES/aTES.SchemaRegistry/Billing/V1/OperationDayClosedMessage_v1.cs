@@ -1,11 +1,11 @@
 ﻿using System;
-using static aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1.BirdInACageMessage_v1;
+using static aTES.SchemaRegistry.Billing.OperationDayClosedMessage_v1;
 
-namespace aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1
+namespace aTES.SchemaRegistry.Billing
 {
-    public class BirdInACageMessage_v1 : IVersionedMessage<Data>
+    public class OperationDayClosedMessage_v1 : IVersionedMessage<Data>
     {
-        public const string EVENT_TYPE = "BirdInACage";
+        public const string EVENT_TYPE = "OperationDayClosed";
 
         public Guid EventId { get; set; }
 
@@ -21,9 +21,7 @@ namespace aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1
 
         public class Data : IMessagePayload
         {
-            public string Id { get; set; }
-
-            public string AssigneeId { get; set; }
+            public DateTime Day { get; set; }
         }
     }
 }

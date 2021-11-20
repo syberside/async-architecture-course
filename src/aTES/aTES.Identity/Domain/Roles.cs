@@ -6,6 +6,7 @@
         Admin = 1,
         RegularPopug = 2,
         Manager = 3,
+        Acounter = 4,
     }
 
     public static class RolesExtension

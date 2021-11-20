@@ -19,7 +19,7 @@ namespace aTES.Identity.Models.Account
 
         public IEnumerable<SelectListItem> DropDownItems(Roles? selected)
         {
-            foreach (var value in new[] { Roles.RegularPopug, Roles.Admin, })
+            foreach (var value in new[] { Roles.RegularPopug, Roles.Admin, Roles.Acounter, Roles.Manager })
             {
                 yield return new SelectListItem
                 {

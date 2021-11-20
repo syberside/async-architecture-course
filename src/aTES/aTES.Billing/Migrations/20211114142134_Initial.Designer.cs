@@ -10,7 +10,7 @@ using aTES.Billing.DataAccess;
 namespace aTES.Billing.Migrations
 {
     [DbContext(typeof(BillingDbContext))]
-    [Migration("20211114080620_Initial")]
+    [Migration("20211114142134_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,7 @@ namespace aTES.Billing.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("AssignedUserId")
+                    b.Property<Guid?>("AssignedUserId")
                         .HasColumnType("uuid")
                         .HasColumnName("assigned_user_id");
 
@@ -128,9 +128,7 @@ namespace aTES.Billing.Migrations
                 {
                     b.HasOne("aTES.Billing.DataAccess.DbUser", "AssignedUser")
                         .WithMany()
-                        .HasForeignKey("AssignedUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AssignedUserId");
 
                     b.Navigation("AssignedUser");
                 });

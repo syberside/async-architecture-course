@@ -5,9 +5,11 @@ namespace aTES.SchemaRegistry.Tasks.BusinessEvents.Workflow.V1
 {
     public class TaskCreatedMessage_v1 : IVersionedMessage<Data>
     {
+        public const string EVENT_TYPE = "TaskCreated";
+
         public Guid EventId { get; set; }
 
-        public string EventType => "TaskCreated";
+        public string EventType => EVENT_TYPE;
 
         public string EventVersion => "1";
 

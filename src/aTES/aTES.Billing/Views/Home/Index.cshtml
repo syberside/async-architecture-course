@@ -1,8 +1,46 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model aTES.Billing.Controllers.AuditLogViewModel
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h2>Your balance is @Model.CurrentBalance$</h2>
+
+    @if (Model.TodayTotal != null)
+    {
+        <div class="container">
+            TODAY TOTAL: @Model.TodayTotal$
+        </div>
+        <form asp-action="CloseDay">
+            <button type="submit" onclick="this.form.submit(); this.disabled=true;"
+                    class="btn btn-danger">
+                CLOSE DAY
+            </button>
+        </form>
+
+    }
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Date</td>
+                <td>Credit</td>
+                <td>Debit</td>
+                <td>Details</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Log)
+            {
+                <tr>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.Credit$</td>
+                    <td>@item.Debit$</td>
+                    <td>@item.Details</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
