@@ -85,7 +85,32 @@ namespace aTES.Identity.Configs
                     {
                         new ClientClaim("PopugRole", "PopugRole")
                     }
-                }
+                },
+                                // interactive ASP.NET Core MVC client (cookie based)
+                new Client
+                {
+                    ClientId = "analytics",
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.Code,
+
+                    // where to redirect to after login
+                    RedirectUris = { "https://localhost:5041/signin-oidc" },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "https://localhost:5041/signout-callback-oidc" },
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                         "PopugRole"
+                    },
+                    Claims=new []
+                    {
+                        new ClientClaim("PopugRole", "PopugRole")
+                    }
+                },
             };
     }
 }
