@@ -55,6 +55,32 @@ namespace aTES.Billing.Services
                 deliveryResult.Status);
         }
 
+        public async Task SendAccountBalanceUpdatedEvent(string publicId, long balance)
+        {
+            var message = new AccountBalanceUpdatedMessage_v1
+            {
+                EventCreatedAt = DateTime.Now,
+                EventId = Guid.NewGuid(),
+                EventProducer = "BillingService",
+                Payload = new AccountBalanceUpdatedMessage_v1.Data
+                {
+                    Balance = balance,
+                    UserId = publicId
+                },
+            };
+            var messageJson = _serializer.Serialize(message);
+            var deliveryResult = await _producer.ProduceAsync(BillingTopics.ACCOUNT_BALANCE, new Message<string, string>
+            {
+                Key = publicId,
+                Value = messageJson,
+            });
+            _logger.LogInformation("Message {0} delivered with offset {1} to partition {2} and status {3}",
+                messageJson,
+                deliveryResult.Offset,
+                deliveryResult.Partition,
+                deliveryResult.Status);
+        }
+
         public async Task SendOperationDayClosedEvent()
         {
             var message = new OperationDayClosedMessage_v1

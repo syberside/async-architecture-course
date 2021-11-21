@@ -33,6 +33,7 @@ namespace aTES.Billing.Services
             _dbContext.Transactions.Add(logRecord);
             user.Balance += credit - debit;
             await _dbContext.SaveChangesAsync();
+            await _messageBus.SendAccountBalanceUpdatedEvent(user.PublicId, user.Balance);
         }
 
         public async Task<(long Balance, IAuditLogEntry[] Log)> GetProfileData(string userId)
