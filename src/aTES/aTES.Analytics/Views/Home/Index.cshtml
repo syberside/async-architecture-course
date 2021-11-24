@@ -1,8 +1,29 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model DashboardViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<dl class="row">
+    <dt class="col-sm-3">Report created at</dt>
+    <dd class="col-sm-9">@Model.GeneratedAt</dd>
+
+    <dt class="col-sm-3">Deptors count</dt>
+    <dd class="col-sm-9">@Model.DeptorsCount</dd>
+
+    <dt class="col-sm-3">Income</dt>
+    <dd class="col-sm-9">@Model.IncomeSize$</dd>
+
+    <dt class="col-sm-3">Most expensive task</dt>
+    <dd class="col-sm-9">@Model.MostExpensiveTaskCost$</dd>
+</dl>
+
+View report:
+<a href="@Url.Action("Index","Home",new {type = DashboardType.MostExpensiveByDay})" class="@(Model.Type==DashboardType.MostExpensiveByDay?"link-primary":"link-secondary")">
+    by day
+</a>
+<a href="@Url.Action("Index","Home",new {type = DashboardType.MostExpensiveByWeek})" class="@(Model.Type==DashboardType.MostExpensiveByWeek?"link-primary":"link-secondary")">
+    by week
+</a>
+<a href="@Url.Action("Index","Home",new {type = DashboardType.MostExpensiveByMonth})" class="@(Model.Type==DashboardType.MostExpensiveByMonth?"link-primary":"link-secondary")">
+    by month
+</a>
